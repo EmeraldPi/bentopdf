@@ -54,7 +54,7 @@
     "archiver": "^7.0.1",
     "blob-stream": "^0.1.3",
     "cropperjs": "^1.6.1",
-    "embedpdf-snippet-i18n": "^1.4.1-15",
+    "embedpdf-snippet-i18n": "file:vendor/embedpdf/embedpdf-build-1.1.0.tgz",
     "heic2any": "^0.0.4",
     "html2canvas": "^1.4.1",
     "javascript-obfuscator": "^4.1.1",
