@@ -40,7 +40,7 @@ jobs:
       - name: Pack snippet tarball
         working-directory: ../embed-pdf-viewer
         run: |
-          npm pack packages/build --pack-destination ../bentopdf/vendor/embedpdf
+          npm pack ./packages/build --pack-destination ../bentopdf/vendor/embedpdf
           ls -l ../bentopdf/vendor/embedpdf
 
       - name: Update package.json dependency path
