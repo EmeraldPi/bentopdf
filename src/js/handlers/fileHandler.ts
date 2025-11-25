@@ -23,6 +23,8 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
+const embedPdfWasmUrl = new URL('embedpdf-snippet/dist/pdfium.wasm', import.meta.url).href;
+
 const rotationState: number[] = [];
 let imageSortableInstance: Sortable | null = null;
 const activeImageUrls = new Map<File, string>();
@@ -802,6 +804,8 @@ export function setupFileInputHandler(toolId) {
       const pdfWrapper = document.getElementById('embed-pdf-wrapper');
       const pdfContainer = document.getElementById('embed-pdf-container');
 
+      if (!pdfContainer) return;
+
       pdfContainer.textContent = ''; // Clear safely
 
       if (state.currentPdfUrl) {
@@ -811,18 +815,14 @@ export function setupFileInputHandler(toolId) {
       const fileURL = URL.createObjectURL(file);
       state.currentPdfUrl = fileURL;
 
-      const script = document.createElement('script');
-      script.type = 'module';
-      script.textContent = `
-                import EmbedPDF from 'https://snippet.embedpdf.com/embedpdf.js';
-                EmbedPDF.init({
-                    type: 'container',
-                    target: document.getElementById('embed-pdf-container'),
-                    src: '${fileURL}',
-                    theme: 'dark',
-                });
-            `;
-      document.head.appendChild(script);
+      const { default: EmbedPDF } = await import('embedpdf-snippet');
+      EmbedPDF.init({
+        type: 'container',
+        target: pdfContainer,
+        src: fileURL,
+        worker: true,
+        wasmUrl: embedPdfWasmUrl,
+      });
 
       const backBtn = document.getElementById('back-to-grid');
       const urlRevoker = () => {
