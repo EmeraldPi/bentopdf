@@ -23,7 +23,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
-const embedPdfWasmUrl = new URL('embedpdf-snippet-i18n/dist/pdfium.wasm', import.meta.url).href;
+const embedPdfWasmUrl = new URL('embedpdf-snippet/dist/pdfium.wasm', import.meta.url).href;
 
 const rotationState: number[] = [];
 let imageSortableInstance: Sortable | null = null;
@@ -815,7 +815,7 @@ export function setupFileInputHandler(toolId) {
       const fileURL = URL.createObjectURL(file);
       state.currentPdfUrl = fileURL;
 
-      const { default: EmbedPDF } = await import('embedpdf-snippet-i18n');
+      const { default: EmbedPDF } = await import('embedpdf-snippet');
       EmbedPDF.init({
         type: 'container',
         target: pdfContainer,
