@@ -77,11 +77,38 @@ jobs:
           npm pack ./snippet --pack-destination ../bentopdf/vendor/embedpdf
           ls -l ../bentopdf/vendor/embedpdf
 
+      - name: Sanitize tarball (rename pkg and pin deps)
+        if: steps.gate.outputs.run == "true"
+        env:
+          UPSTREAM_VERSION: ${{ steps.upstream-version.outputs.version }}
+        run: |
+          TARBALL=$(ls vendor/embedpdf/*.tgz | sort | tail -n1)
+          TMP=$(mktemp -d)
+          tar -xzf "$TARBALL" -C "$TMP"
+          PKG="$TMP/package/package.json"
+          node - <<'NODE'
+const fs = require("fs");
+const path = process.env.PKG;
+const ver = process.env.UPSTREAM_VERSION || "1.4.1";
+const pkg = JSON.parse(fs.readFileSync(path, "utf8"));
+pkg.name = "embedpdf-snippet";
+pkg.dependencies = pkg.dependencies || {};
+for (const k of Object.keys(pkg.dependencies)) {
+  if (k.startsWith("@embedpdf/")) pkg.dependencies[k] = `^${ver}`;
+  if (k === "preact") pkg.dependencies[k] = "^10.17.0";
+}
+fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n");
+NODE
+          NEW=vendor/embedpdf/embedpdf-snippet-${UPSTREAM_VERSION}.tgz
+          tar -czf "$NEW" -C "$TMP" package
+          rm -rf "$TMP"
+          ls -l vendor/embedpdf
+
       - name: Update package.json dependency path
         if: steps.gate.outputs.run == 'true'
         run: |
-          TARBALL=$(ls vendor/embedpdf/*.tgz | sort | tail -n1)
-          node -e "const fs=require('fs');const pkg=require('./package.json');const tar=process.argv[1];pkg.dependencies['embedpdf-snippet-i18n']='file:'+tar;fs.writeFileSync('package.json',JSON.stringify(pkg,null,2)+'\n');" "$TARBALL"
+          TARBALL=$(ls vendor/embedpdf/embedpdf-snippet-*.tgz | sort | tail -n1)
+          node -e "const fs=require('fs');const pkg=require('./package.json');const tar=process.argv[1];pkg.dependencies['embedpdf-snippet']='file:'+tar;fs.writeFileSync('package.json',JSON.stringify(pkg,null,2)+'\n');" "$TARBALL"
 
       - name: Refresh lockfile
         if: steps.gate.outputs.run == 'true'
