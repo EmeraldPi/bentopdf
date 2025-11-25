@@ -18,6 +18,9 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Enable corepack (pnpm)
+        run: corepack enable
+
       - name: Prepare workspace
         run: |
           mkdir -p vendor/embedpdf
@@ -28,11 +31,11 @@ jobs:
 
       - name: Install upstream deps
         working-directory: ../embed-pdf-viewer
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build snippet
         working-directory: ../embed-pdf-viewer
-        run: npm run build:snippet
+        run: pnpm run build:snippet
 
       - name: Pack snippet tarball
         working-directory: ../embed-pdf-viewer
