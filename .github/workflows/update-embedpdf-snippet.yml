@@ -45,8 +45,8 @@ jobs:
 
       - name: Update package.json dependency path
         run: |
-          TARBALL=$(ls vendor/embedpdf/embedpdf-*.tgz | sort | tail -n1)
-          node -e "const fs=require('fs');const pkg=require('./package.json');const tar=process.argv[1];pkg.dependencies['embedpdf-snippet-i18n']=`file:${tar}`;fs.writeFileSync('package.json',JSON.stringify(pkg,null,2)+'\\n');" "$TARBALL"
+          TARBALL=$(ls vendor/embedpdf/*.tgz | sort | tail -n1)
+          node -e "const fs=require('fs');const pkg=require('./package.json');const tar=process.argv[1];pkg.dependencies['embedpdf-snippet-i18n']='file:'+tar;fs.writeFileSync('package.json',JSON.stringify(pkg,null,2)+'\\n');" "$TARBALL"
 
       - name: Refresh lockfile
         run: npm install --package-lock-only
