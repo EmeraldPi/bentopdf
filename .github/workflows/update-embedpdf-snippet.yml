@@ -101,6 +101,8 @@ jobs:
           NODE
           NEW=vendor/embedpdf/embedpdf-snippet-${UPSTREAM_VERSION}.tgz
           tar -czf "$NEW" -C "$TMP" package
+          # Remove any older snippet tarballs, keep only the new one
+          find vendor/embedpdf -maxdepth 1 -name 'embedpdf-snippet-*.tgz' ! -name "$(basename "$NEW")" -delete
           rm -rf "$TMP"
           ls -l vendor/embedpdf
 
