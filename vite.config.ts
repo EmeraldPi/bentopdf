@@ -4,6 +4,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
 
 export default defineConfig(({ mode }) => ({
+  base: process.env.BASE_URL || '/',
   plugins: [
     tailwindcss(),
     nodePolyfills({
@@ -61,6 +62,13 @@ export default defineConfig(({ mode }) => ({
         'pdf-multi-tool': resolve(__dirname, 'src/pages/pdf-multi-tool.html'),
         'add-stamps': resolve(__dirname, 'src/pages/add-stamps.html'),
         'form-creator': resolve(__dirname, 'src/pages/form-creator.html'),
+        'repair-pdf': resolve(__dirname, 'src/pages/repair-pdf.html'),
+        'merge-pdf': resolve(__dirname, 'src/pages/merge-pdf.html'),
+        'split-pdf': resolve(__dirname, 'src/pages/split-pdf.html'),
+        'compress-pdf': resolve(__dirname, 'src/pages/compress-pdf.html'),
+        'edit-pdf': resolve(__dirname, 'src/pages/edit-pdf.html'),
+        'jpg-to-pdf': resolve(__dirname, 'src/pages/jpg-to-pdf.html'),
+
       },
     },
   },

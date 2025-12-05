@@ -1,5 +1,5 @@
-import { merge, setupMergeTool } from './merge.js';
-import { setupSplitTool, split } from './split.js';
+
+
 import { encrypt } from './encrypt.js';
 import { decrypt } from './decrypt.js';
 import { organize } from './organize.js';
@@ -8,7 +8,7 @@ import { addPageNumbers } from './add-page-numbers.js';
 import { pdfToJpg } from './pdf-to-jpg.js';
 import { jpgToPdf } from './jpg-to-pdf.js';
 import { scanToPdf } from './scan-to-pdf.js';
-import { compress } from './compress.js';
+
 import { pdfToGreyscale } from './pdf-to-greyscale.js';
 import { pdfToZip } from './pdf-to-zip.js';
 import { editMetadata } from './edit-metadata.js';
@@ -18,7 +18,7 @@ import { pdfToPng } from './pdf-to-png.js';
 import { pngToPdf } from './png-to-pdf.js';
 import { pdfToWebp } from './pdf-to-webp.js';
 import { webpToPdf } from './webp-to-pdf.js';
-import { deletePages } from './delete-pages.js';
+import { deletePages, setupDeletePagesTool } from './delete-pages.js';
 import { addBlankPage } from './add-blank-page.js';
 import { extractPages } from './extract-pages.js';
 import { addWatermark, setupWatermarkUI } from './add-watermark.js';
@@ -67,20 +67,21 @@ import { extractAttachments } from './extract-attachments.js';
 import { editAttachments, setupEditAttachmentsTool } from './edit-attachments.js';
 import { sanitizePdf } from './sanitize-pdf.js';
 import { removeRestrictions } from './remove-restrictions.js';
+import { repairPdf } from './repair-pdf.js';
 
 export const toolLogic = {
-  merge: { process: merge, setup: setupMergeTool },
-  split: { process: split, setup: setupSplitTool },
+
   encrypt,
   decrypt,
   'remove-restrictions': removeRestrictions,
+  'repair-pdf': repairPdf,
   organize,
   rotate,
   'add-page-numbers': addPageNumbers,
   'pdf-to-jpg': pdfToJpg,
   'jpg-to-pdf': jpgToPdf,
   'scan-to-pdf': scanToPdf,
-  compress,
+
   'pdf-to-greyscale': pdfToGreyscale,
   'pdf-to-zip': pdfToZip,
   'edit-metadata': editMetadata,
@@ -90,7 +91,7 @@ export const toolLogic = {
   'png-to-pdf': pngToPdf,
   'pdf-to-webp': pdfToWebp,
   'webp-to-pdf': webpToPdf,
-  'delete-pages': deletePages,
+  'delete-pages': { process: deletePages, setup: setupDeletePagesTool },
   'add-blank-page': addBlankPage,
   'extract-pages': extractPages,
   'add-watermark': { process: addWatermark, setup: setupWatermarkUI },
