@@ -79,7 +79,7 @@ jobs:
       - name: Install upstream deps
         if: steps.gate.outputs.run == 'true'
         working-directory: ./_upstream/embed-pdf-viewer
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build snippet
         if: steps.gate.outputs.run == 'true'
