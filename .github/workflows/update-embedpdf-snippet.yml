@@ -39,15 +39,6 @@ jobs:
             echo "Updating from '${{ steps.current-version.outputs.version }}' to '${{ steps.upstream-version.outputs.version }}'"
           fi
 
-      - name: Cache npm cache
-        if: steps.gate.outputs.run == 'true'
-        uses: actions/cache@v4
-        with:
-          path: ./.npm-cache
-          key: ${{ runner.os }}-npm-cache-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-cache-
-
       - name: Enable corepack (pnpm)
         if: steps.gate.outputs.run == 'true'
         run: corepack enable
@@ -62,19 +53,12 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: git clone --depth 1 --branch main https://github.com/embedpdf/embed-pdf-viewer ./_upstream/embed-pdf-viewer
 
-      - name: Setup pnpm
-        if: steps.gate.outputs.run == 'true'
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Setup Node
         if: steps.gate.outputs.run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
-          cache-dependency-path: ./_upstream/embed-pdf-viewer/pnpm-lock.yaml
+          cache: npm
 
       - name: Install upstream deps
         if: steps.gate.outputs.run == 'true'
