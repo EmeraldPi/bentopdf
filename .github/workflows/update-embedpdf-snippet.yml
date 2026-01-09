@@ -114,6 +114,8 @@ jobs:
 
       - name: Refresh lockfile
         if: steps.gate.outputs.run == 'true'
+        env:
+          HUSKY: 0
         run: npm install --package-lock-only
 
       - name: Write upstream version marker
