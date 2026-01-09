@@ -90,8 +90,8 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         working-directory: ./_upstream/embed-pdf-viewer
         run: |
-          npm pack ./viewers/snippet --pack-destination ../vendor/embedpdf
-          ls -l ../vendor/embedpdf
+          npm pack ./viewers/snippet --pack-destination ../../vendor/embedpdf
+          ls -l ../../vendor/embedpdf
 
       - name: Sanitize tarball (rename pkg and pin deps)
         if: steps.gate.outputs.run == 'true'
