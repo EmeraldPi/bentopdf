@@ -60,7 +60,7 @@ jobs:
 
       - name: Clone upstream embed-pdf-viewer
         if: steps.gate.outputs.run == 'true'
-        run: git clone --depth 1 --branch main https://github.com/embedpdf/embed-pdf-viewer ../embed-pdf-viewer
+        run: git clone --depth 1 --branch main https://github.com/embedpdf/embed-pdf-viewer ./_upstream/embed-pdf-viewer
 
       - name: Setup pnpm
         if: steps.gate.outputs.run == 'true'
@@ -74,24 +74,24 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-          cache-dependency-path: ../embed-pdf-viewer/pnpm-lock.yaml
+          cache-dependency-path: ./_upstream/embed-pdf-viewer/pnpm-lock.yaml
 
       - name: Install upstream deps
         if: steps.gate.outputs.run == 'true'
-        working-directory: ../embed-pdf-viewer
+        working-directory: ./_upstream/embed-pdf-viewer
         run: pnpm install --frozen-lockfile
 
       - name: Build snippet
         if: steps.gate.outputs.run == 'true'
-        working-directory: ../embed-pdf-viewer
+        working-directory: ./_upstream/embed-pdf-viewer
         run: pnpm run build:snippet
 
       - name: Pack snippet tarball
         if: steps.gate.outputs.run == 'true'
-        working-directory: ../embed-pdf-viewer
+        working-directory: ./_upstream/embed-pdf-viewer
         run: |
-          npm pack ./viewers/snippet --pack-destination ../bentopdf/vendor/embedpdf
-          ls -l ../bentopdf/vendor/embedpdf
+          npm pack ./viewers/snippet --pack-destination ../vendor/embedpdf
+          ls -l ../vendor/embedpdf
 
       - name: Sanitize tarball (rename pkg and pin deps)
         if: steps.gate.outputs.run == 'true'
@@ -136,6 +136,10 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: |
           echo "${{ steps.upstream-version.outputs.version }}" > vendor/embedpdf/.upstream-version
+
+      - name: Cleanup upstream clone
+        if: steps.gate.outputs.run == 'true'
+        run: rm -rf ./_upstream
 
       - name: Create Pull Request
         if: steps.gate.outputs.run == 'true'
